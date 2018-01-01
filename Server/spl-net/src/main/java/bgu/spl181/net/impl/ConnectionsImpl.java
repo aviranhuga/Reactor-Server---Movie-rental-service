@@ -1,14 +1,15 @@
 package bgu.spl181.net.impl;
 
+
 import bgu.spl181.net.api.bidi.Connections;
-import bgu.spl181.net.srv.ConnectionHandler;
+import bgu.spl181.net.srv.bidi.ConnectionHandler;
 
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ConnectionsImpl<T> implements Connections<T> {
 
-    private ConcurrentHashMap<String,ConnectionHandler<T>> clients = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, ConnectionHandler<T>> clients = new ConcurrentHashMap<>();
 
     @Override
     public boolean send(int connectionId, T msg) {

@@ -2,6 +2,8 @@ package bgu.spl181.net.srv;
 
 import bgu.spl181.net.api.MessageEncoderDecoder;
 import bgu.spl181.net.api.bidi.BidiMessagingProtocol;
+import bgu.spl181.net.api.bidi.Connections;
+import bgu.spl181.net.srv.bidi.ConnectionHandler;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -16,11 +18,13 @@ public class BlockingConnectionHandler<T> implements Runnable, ConnectionHandler
     private BufferedInputStream in;
     private BufferedOutputStream out;
     private volatile boolean connected = true;
+    private Connections<T> connections;
 
-    public BlockingConnectionHandler(Socket sock, MessageEncoderDecoder<T> reader, BidiMessagingProtocol<T> protocol) {
+    public BlockingConnectionHandler(Socket sock, MessageEncoderDecoder<T> reader, BidiMessagingProtocol<T> protocol,Connections<T> connections ) {
         this.sock = sock;
         this.encdec = reader;
         this.protocol = protocol;
+        this.connections=connections;
     }
 
     @Override
@@ -31,18 +35,13 @@ public class BlockingConnectionHandler<T> implements Runnable, ConnectionHandler
             in = new BufferedInputStream(sock.getInputStream());
             out = new BufferedOutputStream(sock.getOutputStream());
 
+            this.protocol.start(sock.getLocalPort(),connections);
+
             while (!protocol.shouldTerminate() && connected && (read = in.read()) >= 0) {
                 T nextMessage = encdec.decodeNextByte((byte) read);
-                if (nextMessage != null) {
+                if (nextMessage != null)
                     protocol.process(nextMessage);
-                    //T response = protocol.process(nextMessage);
-                   // if (response != null) {
-                   //     out.write(encdec.encode(response));
-                   //     out.flush();
-                    // }
                 }
-            }
-
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -57,14 +56,15 @@ public class BlockingConnectionHandler<T> implements Runnable, ConnectionHandler
 
     @Override
     public void send(T msg) {
-        if(connected){
-            try {
-                out.write(encdec.encode(msg));
-                out.flush();
-            } catch (IOException e) {
-                e.printStackTrace();
+        if (this.connected) {
+            if (msg != null) {
+                try {
+                    out.write(encdec.encode(msg));
+                    out.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-
         }
     }
 }
