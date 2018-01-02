@@ -2,6 +2,10 @@ package bgu.spl181.net.srv;
 
 import bgu.spl181.net.api.MessageEncoderDecoder;
 import bgu.spl181.net.api.MessagingProtocol;
+import bgu.spl181.net.api.bidi.BidiMessagingProtocol;
+import bgu.spl181.net.api.bidi.Connections;
+import bgu.spl181.net.impl.ConnectionsImpl;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.channels.ClosedSelectorException;
@@ -9,30 +13,36 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.text.Bidi;
+import java.util.Collections;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Supplier;
 
 public class Reactor<T> implements Server<T> {
 
     private final int port;
-    private final Supplier<MessagingProtocol<T>> protocolFactory;
+    private final Supplier<BidiMessagingProtocol<T>> protocolFactory;
     private final Supplier<MessageEncoderDecoder<T>> readerFactory;
     private final ActorThreadPool pool;
     private Selector selector;
+    private Connections<T> connections;
 
     private Thread selectorThread;
     private final ConcurrentLinkedQueue<Runnable> selectorTasks = new ConcurrentLinkedQueue<>();
 
+    private int connectionId;
+
     public Reactor(
             int numThreads,
             int port,
-            Supplier<MessagingProtocol<T>> protocolFactory,
+            Supplier<BidiMessagingProtocol<T>> protocolFactory,
             Supplier<MessageEncoderDecoder<T>> readerFactory) {
 
         this.pool = new ActorThreadPool(numThreads);
         this.port = port;
         this.protocolFactory = protocolFactory;
         this.readerFactory = readerFactory;
+        this.connectionId=0;
     }
 
     @Override
@@ -42,7 +52,7 @@ public class Reactor<T> implements Server<T> {
                 ServerSocketChannel serverSock = ServerSocketChannel.open()) {
 
             this.selector = selector; //just to be able to close
-
+            connections = new ConnectionsImpl<>();
             serverSock.bind(new InetSocketAddress(port));
             serverSock.configureBlocking(false);
             serverSock.register(selector, SelectionKey.OP_ACCEPT);
@@ -95,11 +105,14 @@ public class Reactor<T> implements Server<T> {
     private void handleAccept(ServerSocketChannel serverChan, Selector selector) throws IOException {
         SocketChannel clientChan = serverChan.accept();
         clientChan.configureBlocking(false);
-        final NonBlockingConnectionHandler handler = new NonBlockingConnectionHandler(
+        BidiMessagingProtocol<T> clientMessagingProtocol = protocolFactory.get();
+        final NonBlockingConnectionHandler handler = new NonBlockingConnectionHandler<>(
                 readerFactory.get(),
-                protocolFactory.get(),
+                clientMessagingProtocol,
                 clientChan,
                 this);
+        clientMessagingProtocol.start(++connectionId,connections);
+        ((ConnectionsImpl<T>)connections).connect(connectionId,handler);
         clientChan.register(selector, SelectionKey.OP_READ, handler);
     }
 

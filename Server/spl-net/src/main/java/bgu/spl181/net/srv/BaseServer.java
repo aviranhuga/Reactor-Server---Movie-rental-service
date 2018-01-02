@@ -8,6 +8,7 @@ import bgu.spl181.net.impl.ConnectionsImpl;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
 public abstract class BaseServer<T> implements Server<T> {
@@ -16,7 +17,7 @@ public abstract class BaseServer<T> implements Server<T> {
     private final Supplier<BidiMessagingProtocol<T>> protocolFactory;
     private final Supplier<MessageEncoderDecoder<T>> encdecFactory;
     private ServerSocket sock;
-    private Connections<T> connections;
+    private ConnectionsImpl<T> connections;
 
     public BaseServer(
             int port,
@@ -39,15 +40,22 @@ public abstract class BaseServer<T> implements Server<T> {
 
             this.connections = new ConnectionsImpl<>();
 
+            int connectionId = 0;
+
+            BidiMessagingProtocol<T> clientMessagingProtocol;
+
             while (!Thread.currentThread().isInterrupted()) {
 
                 Socket clientSock = serverSock.accept();
 
+                clientMessagingProtocol = protocolFactory.get();
+                clientMessagingProtocol.start(++connectionId,connections);
                 BlockingConnectionHandler<T> handler = new BlockingConnectionHandler<>(
                         clientSock,
                         encdecFactory.get(),
-                        protocolFactory.get(),
-                        connections);
+                        clientMessagingProtocol);
+                connections.connect(connectionId,handler);
+
                 execute(handler);
             }
         } catch (IOException ex) {
