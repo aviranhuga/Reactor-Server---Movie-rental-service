@@ -1,17 +1,24 @@
 CFLAGS:=-c -Wall -Weffc++ -g -std=c++11 -Iinclude
-LDFLAGS:=-lboost_system
+LDFLAGS:=-lboost_system -lboost_thread
 
-all: EchoClient
-	g++ -o bin/echoExample bin/connectionHandler.o bin/echoClient.o $(LDFLAGS) 
+#All Targets  
+all: BBclient
+	@echo 'Building target: BBclient'
+	@echo 'Invoking: C++ Linker'
+	g++ -o bin/BBclient bin/connectionHandler.o bin/BBclient.o $(LDFLAGS) 
+	@echo 'Finished building target: BBclient'
+	@echo ' '
+BBclient: bin/connectionHandler.o bin/BBclient.o
 
-EchoClient: bin/connectionHandler.o bin/echoClient.o
-	
+# Depends on the source and header files	
 bin/connectionHandler.o: src/connectionHandler.cpp
 	g++ $(CFLAGS) -o bin/connectionHandler.o src/connectionHandler.cpp
 
-bin/echoClient.o: src/echoClient.cpp
-	g++ $(CFLAGS) -o bin/echoClient.o src/echoClient.cpp
-	
+# Depends on the source and header files
+bin/BBclient.o: src/BBclient.cpp
+	g++ $(CFLAGS) -o bin/BBclient.o src/BBclient.cpp
+
+#Clean the build directory	
 .PHONY: clean
 clean:
 	rm -f bin/*
