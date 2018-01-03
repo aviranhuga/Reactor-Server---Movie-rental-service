@@ -14,16 +14,16 @@ public class TestServer {
 
     public static void main(String[] args) throws IOException {
 
-//        Server.threadPerClient(
-//                7777,
-//                ()->new TestProtocol(),
-//                ()->new TestMessageEncoderDecoder()
-//        ).serve();
-        Server.reactor(6,
+        Server.threadPerClient(
                 7777,
                 ()->new TestProtocol(),
                 ()->new TestMessageEncoderDecoder()
         ).serve();
+//        Server.reactor(6,
+//                7777,
+//                ()->new TestProtocol(),
+//                ()->new TestMessageEncoderDecoder()
+//        ).serve();
 
     }
 }

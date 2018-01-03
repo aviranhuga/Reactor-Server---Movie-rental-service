@@ -1,10 +1,9 @@
 package bgu.spl181.net.srv;
 
 import bgu.spl181.net.api.MessageEncoderDecoder;
-import bgu.spl181.net.api.MessagingProtocol;
 import bgu.spl181.net.api.bidi.BidiMessagingProtocol;
 import bgu.spl181.net.api.bidi.Connections;
-import bgu.spl181.net.impl.ConnectionsImpl;
+import bgu.spl181.net.impl.bidi.ConnectionsImpl;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -13,8 +12,6 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
-import java.text.Bidi;
-import java.util.Collections;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Supplier;
 
@@ -30,8 +27,6 @@ public class Reactor<T> implements Server<T> {
     private Thread selectorThread;
     private final ConcurrentLinkedQueue<Runnable> selectorTasks = new ConcurrentLinkedQueue<>();
 
-    private int connectionId;
-
     public Reactor(
             int numThreads,
             int port,
@@ -42,7 +37,6 @@ public class Reactor<T> implements Server<T> {
         this.port = port;
         this.protocolFactory = protocolFactory;
         this.readerFactory = readerFactory;
-        this.connectionId=0;
     }
 
     @Override
@@ -111,8 +105,8 @@ public class Reactor<T> implements Server<T> {
                 clientMessagingProtocol,
                 clientChan,
                 this);
-        clientMessagingProtocol.start(++connectionId,connections);
-        ((ConnectionsImpl<T>)connections).connect(connectionId,handler);
+        int connectionId =((ConnectionsImpl<T>)connections).connect(handler);
+        clientMessagingProtocol.start(connectionId,connections);
         clientChan.register(selector, SelectionKey.OP_READ, handler);
     }
 

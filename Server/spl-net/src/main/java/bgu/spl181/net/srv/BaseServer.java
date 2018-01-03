@@ -2,13 +2,11 @@ package bgu.spl181.net.srv;
 
 import bgu.spl181.net.api.MessageEncoderDecoder;
 import bgu.spl181.net.api.bidi.BidiMessagingProtocol;
-import bgu.spl181.net.api.bidi.Connections;
-import bgu.spl181.net.impl.ConnectionsImpl;
+import bgu.spl181.net.impl.bidi.ConnectionsImpl;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 
 public abstract class BaseServer<T> implements Server<T> {
@@ -39,9 +37,7 @@ public abstract class BaseServer<T> implements Server<T> {
             this.sock = serverSock; //just to be able to close
 
             this.connections = new ConnectionsImpl<>();
-
-            int connectionId = 0;
-
+            int connectionId;
             BidiMessagingProtocol<T> clientMessagingProtocol;
 
             while (!Thread.currentThread().isInterrupted()) {
@@ -49,13 +45,13 @@ public abstract class BaseServer<T> implements Server<T> {
                 Socket clientSock = serverSock.accept();
 
                 clientMessagingProtocol = protocolFactory.get();
-                clientMessagingProtocol.start(++connectionId,connections);
+
                 BlockingConnectionHandler<T> handler = new BlockingConnectionHandler<>(
                         clientSock,
                         encdecFactory.get(),
                         clientMessagingProtocol);
-                connections.connect(connectionId,handler);
-
+                connectionId = connections.connect(handler);
+                clientMessagingProtocol.start(connectionId,connections);
                 execute(handler);
             }
         } catch (IOException ex) {
