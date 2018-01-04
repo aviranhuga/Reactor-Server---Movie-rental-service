@@ -1,5 +1,9 @@
 package bgu.spl181.net.impl.bidi;
 
+import bgu.spl181.net.impl.bidi.UserServiceTextBasedProtocol.Result;
+
+import java.util.ArrayList;
+
 /**
  * @author TomHorvitz and AviraHuga
  */
@@ -7,13 +11,16 @@ public interface Service {
 
     void start();
 
-    Result handleRegister(String username, String password, String datablock);
+    /**
+     * try to register new user.
+     */
+    public Boolean registerNewUser(String username,String password,ArrayList<String> datablock);
+    /**
+     * check if the username and password fit
+     */
+    public Boolean CheckUsernameAndPassword(String username,String password);
 
-    Result handleLogin(String username, String password);
-
-    Result handleSignOut();
-
-    Result handleRegister(String username, String datablock);
+    public Result handleRequest(String name,ArrayList<String> parameters);
 
     void end();
 }
