@@ -84,5 +84,10 @@ public class MoviesJSON {
         return movies;
     }
 
+    public void rentmovie(String moviename){
+        getFromJson();
+        movies_.getMovie(moviename).setavailableAmount(movies_.getMovie(moviename).gettotalAmount()-1);
+    }
+
 
 }

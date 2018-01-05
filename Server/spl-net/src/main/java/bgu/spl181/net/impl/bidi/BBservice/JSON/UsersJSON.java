@@ -88,6 +88,11 @@ public class UsersJSON {
         readWriteLock.readLock().unlock();
         return ans;
     }
+    public void rentmovie(String username, String moviename, int amount){
+        getFromJson();
+        users_.getUser(username).decBalance(amount);
+        users_.getUser(username).addmovie(moviename);
+    }
 
 
 }

@@ -41,6 +41,14 @@ public class user {
         return false;
     }
 
+    public void addmovie(String moviename){
+        userMovie[] temp = new userMovie[movies.length+1];
+        int j=0;
+        for(userMovie i:movies)
+            temp[j++] = i;
+        temp[j] = new userMovie(temp[j-1].getId()+1,moviename);
+    }
+
     @Override
     public String toString() {
         String moviesString = "";

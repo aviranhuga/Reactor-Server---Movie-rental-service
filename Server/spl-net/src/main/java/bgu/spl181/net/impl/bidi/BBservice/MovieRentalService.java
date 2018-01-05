@@ -129,10 +129,21 @@ public class MovieRentalService  implements Service{
     private Result handlerent(String username, ArrayList<String> parameters){
         if(parameters.size()==1){
             String moviename = parameters.get(0);
-            if(movieshandler.hasMovie(moviename) && usershandler.getuser(username).){
-
+            if(movieshandler.hasMovie(moviename)){
                 Movie movie = movieshandler.getMovie(moviename);
-                if()
+                user user = usershandler.getuser(username);
+                if(user.hasmovie(moviename) && movie.availbleInCountry(user.getCountry())){
+                    userlock.writeLock().lock();
+                    movielock.writeLock().lock();
+                    user = usershandler.getuser(username);
+                    movie = movieshandler.getMovie(moviename);
+                    if(user.getBalance() >= movie.getprice() && movie.getavailableAmount()>0){
+                        user.;
+
+                        return new Result()
+                    }
+
+                }
             }
         }
     }
