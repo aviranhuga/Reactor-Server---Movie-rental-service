@@ -26,8 +26,9 @@ public class BidiMessagingProtocolImpl implements BidiMessagingProtocol<String>{
         username="";
     }
 
-    public BidiMessagingProtocolImpl(ConcurrentHashMap<String,String> onlineUsers){
+    public BidiMessagingProtocolImpl(ConcurrentHashMap<String,String> onlineUsers,Service service){
         this.onlineUsers=onlineUsers;
+        this.service=service;
     }
 
     @Override
@@ -46,6 +47,7 @@ public class BidiMessagingProtocolImpl implements BidiMessagingProtocol<String>{
                 result = (new LoginCommand(th.getName(), th.getPassword(), service, onlineUsers, logedIn)).handle();
                 if(result.getType().equals("ACK")){
                     logedIn=true;
+                    username=th.getName();
                     onlineUsers.put(th.getName(),String.valueOf(connectionId));
                 }
                 break;
@@ -53,11 +55,11 @@ public class BidiMessagingProtocolImpl implements BidiMessagingProtocol<String>{
                 result = (new SignoutCommand(logedIn)).handle();
                 if(result.getType().equals("ACK")){
                     logedIn=false;
-                    onlineUsers.remove(th.getName());
+                    onlineUsers.remove(username);
                 }
                 break;
             case "REQUEST":
-                result = (new RequestCommand(th.getName(),th.getDataBlock(),logedIn,service)).handle();
+                result = (new RequestCommand(this.username,th.getName(),th.getDataBlock(),logedIn,service)).handle();
                 if(result.getType().equals("BROADCAST"))broadcast(result.getMessage());
                 break;
         }

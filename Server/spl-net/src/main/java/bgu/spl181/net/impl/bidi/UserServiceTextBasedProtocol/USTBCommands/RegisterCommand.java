@@ -30,6 +30,7 @@ public class RegisterCommand extends USTBCommand {
         else
             result.setResult("ERROR", "ERROR registration failed");
 
+        System.out.println(result.getMessage());
         return result;
     }
 

@@ -19,6 +19,10 @@ public class Result {
         result=false;
     }
 
+    public Result(String type, String message){
+        setResult(type,message);
+    }
+
     public void setResult(String type, String message){
         this.type=type;
         this.message=message;

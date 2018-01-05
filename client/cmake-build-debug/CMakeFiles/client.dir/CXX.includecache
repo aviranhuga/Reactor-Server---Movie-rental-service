@@ -1,0 +1,28 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/aviran/newSPL/client/Boost_Echo_Client/include/connectionHandler.h
+string
+-
+iostream
+-
+boost/asio.hpp
+-
+
+/home/aviran/newSPL/client/Boost_Echo_Client/src/connectionHandler.cpp
+../include/connectionHandler.h
+/home/aviran/newSPL/client/Boost_Echo_Client/include/connectionHandler.h
+
+/home/aviran/newSPL/client/Boost_Echo_Client/src/echoClient.cpp
+stdlib.h
+-
+../include/connectionHandler.h
+/home/aviran/newSPL/client/Boost_Echo_Client/include/connectionHandler.h
+boost/thread.hpp
+-
+

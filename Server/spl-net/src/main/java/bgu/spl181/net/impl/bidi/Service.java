@@ -19,8 +19,10 @@ public interface Service {
      * check if the username and password fit
      */
     public Boolean CheckUsernameAndPassword(String username,String password);
-
-    public Result handleRequest(String name,ArrayList<String> parameters);
+    /**
+     * handle requests
+     */
+    public Result handleRequest(String name,String username,ArrayList<String> parameters);
 
     void end();
 }
