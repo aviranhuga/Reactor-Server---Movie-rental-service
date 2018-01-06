@@ -19,17 +19,14 @@ public class MovieRentalService  implements Service {
         usershandler = new UsersJSON(userpath, userslock);
         movieshandler = new MoviesJSON(moviespath, movieslock);
     }
-
     @Override
     public void start() {
     }
-
     /**
-     * register new user to the system
-     *
-     * @param username
-     * @param password
-     * @param datablock
+     * try to register new user to the system
+     * @param username username
+     * @param password password
+     * @param datablock country
      * @return true if added and false otherwise
      */
     @Override
@@ -44,26 +41,22 @@ public class MovieRentalService  implements Service {
         }
         return false;//country syntax is not right
     }
-
     /**
      * check if the username mach the password
-     *
-     * @param username
-     * @param password
-     * @return
+     * @param username username
+     * @param password password
+     * @return true if the username mach the password and false otherwise
      */
     @Override
     public Boolean CheckUsernameAndPassword(String username, String password) {
         return usershandler.CheckUsernameAndPassword(username, password);
     }
-
     /**
-     * handle all request
-     *
-     * @param name
-     * @param username
-     * @param parameters
-     * @return
+     * send the request to the right handler
+     * @param name request command name
+     * @param username username of the current user
+     * @param parameters additional data
+     * @return the request result
      */
     @Override
     public Result handleRequest(String name, String username, ArrayList<String> parameters) {
@@ -87,6 +80,12 @@ public class MovieRentalService  implements Service {
             case "addmovie":
                 result = handleaddmovie(username, parameters);
                 break;
+            case "remmovie":
+                result = handleremmovie(username, parameters);
+                break;
+            case "changeprice":
+                result = handlechangeprice(username, parameters);
+                break;
 
 
         }
@@ -97,15 +96,21 @@ public class MovieRentalService  implements Service {
     public void end() {
 
     }
-
     /**
-     * handle functions for specific requests
+     * handle balance info request
+     * @param username username
+     * @return action result
      */
     private Result handlebalanceinfo(String username) {
         String balance = String.valueOf(usershandler.getuser(username).getBalance());
         return new Result("ACK", "ACK balance " + balance);
     }
-
+    /**
+     *  handle balance add request
+     * @param username  username
+     * @param parameters amount
+     * @return action result
+     */
     private Result handlebalaceadd(String username, ArrayList<String> parameters) {
         if (parameters.size() == 1) {
             String amount = parameters.get(0);
@@ -113,7 +118,11 @@ public class MovieRentalService  implements Service {
         }
         return new Result("ERROR", "ERROR request balance add failed");
     }
-
+    /**
+     * handle info request
+     * @param parameters movie name or none
+     * @return action result
+     */
     private Result handleinfo(ArrayList<String> parameters) {
         if (parameters.size() == 0) {//no movie name, get all movies
             String movieslist = "";
@@ -131,7 +140,12 @@ public class MovieRentalService  implements Service {
         }
         return new Result("ERROR", "ERROR request info failed");
     }
-
+    /**
+     * handle rent request
+     * @param username username
+     * @param parameters movie name
+     * @return action result
+     */
     private Result handlerent(String username, ArrayList<String> parameters) {
         if (parameters.size() == 1) { // check if we have the movie name
             String moviename = parameters.get(0);
@@ -142,18 +156,28 @@ public class MovieRentalService  implements Service {
         }
         return new Result("ERROR", "ERROR request rent failed");
     }
-
+    /**
+     * handle return request
+     * @param username username
+     * @param parameters movie name
+     * @return action result
+     */
     private Result handlereturn(String username, ArrayList<String> parameters) {
         if (parameters.size() == 1) { // check if we have the movie name
             String moviename = parameters.get(0);
             Movie movie = usershandler.rentmovie(username, moviename, this.movieshandler);
             if (movie != null) {
                 return new Result("ACK", "ACK return " + moviename + " success", "BROADCAST movie " + moviename + " " + String.valueOf(movie.getavailableAmount()) + " " + String.valueOf(movie.getprice()));
-                }
-           }
-              return new Result("ERROR", "ERROR request return failed");
+            }
         }
-
+        return new Result("ERROR", "ERROR request return failed");
+    }
+    /**
+     * handle add movie request
+     * @param username username
+     * @param parameters movie details
+     * @return action result
+     */
     private Result handleaddmovie(String username,ArrayList<String> parameters ){
         if(usershandler.checkifadmin(username)&&
                 parameters.size()>2){
@@ -168,5 +192,36 @@ public class MovieRentalService  implements Service {
         return new Result("ERROR", "ERROR request addmovie failed");
     }
 
+    /**
+     * handle remove movie request
+     * @param username username
+     * @param parameters movie name
+     * @return action result
+     */
+    private Result handleremmovie(String username,ArrayList<String> parameters){
+        if(usershandler.checkifadmin(username)&&
+                parameters.size()==1){
+            String moviename=parameters.get(0);
+            Boolean ans =movieshandler.remmovie(moviename);
+            if (ans)return new Result("ACK","remmovie "+moviename+" success","BROADCAST movie "+moviename+" removed");
+        }
+        return new Result("ERROR","ERROR request remmovie failed");
+    }
 
+    /**
+     * handle change price request
+     * @param username username
+     * @param parameters price
+     * @return action result
+     */
+    private Result handlechangeprice(String username,ArrayList<String> parameters){
+        if(usershandler.checkifadmin(username) && parameters.size()==1){
+            int price = Integer.parseInt(parameters.get(1));
+            if(price>0){
+                Movie movie = movieshandler.changeprice(username, price);
+                    return new Result("ACK", "ACK changeprice "+parameters.get(1) +" " +String.valueOf(movie.getavailableAmount()));
+            }
+        }
+        return new Result("ERROR","ERROR request changeprice failed");
+    }
 }

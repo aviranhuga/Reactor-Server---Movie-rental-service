@@ -4,7 +4,6 @@ import bgu.spl181.net.impl.bidi.BBservice.JSON.JSONclasses.movies.Movie;
 import bgu.spl181.net.impl.bidi.BBservice.JSON.JSONclasses.movies.Movies;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.sun.org.apache.xerces.internal.xs.StringList;
 
 import java.io.*;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -59,7 +58,6 @@ public class MoviesJSON {
         readWriteLock.readLock().unlock();
         return ans;
     }
-
     /**
      * get a specific movie from json file
      * @param moviename
@@ -72,7 +70,6 @@ public class MoviesJSON {
         readWriteLock.readLock().lock();
         return movie;
     }
-
     /**
      * get movies list
      * @return
@@ -84,7 +81,13 @@ public class MoviesJSON {
         readWriteLock.readLock().unlock();
         return movies;
     }
-
+    /**
+     * rent a movie function
+     * @param moviename
+     * @param balance
+     * @param country
+     * @return the movie or null otherwise
+     */
     public Movie rentmovie(String moviename,int balance,String country){
         readWriteLock.writeLock().lock();
         Movie rentmovie=null;
@@ -101,7 +104,11 @@ public class MoviesJSON {
         readWriteLock.writeLock().unlock();
         return rentmovie;
     }
-
+    /**
+     * return a movie function
+     * @param moviename
+     * @return the movie
+     */
     public Movie returnmovie(String moviename){
         readWriteLock.writeLock().lock();
         getFromJson();
@@ -111,7 +118,14 @@ public class MoviesJSON {
         readWriteLock.writeLock().unlock();
         return movie;
     }
-
+    /**
+     * add new movie to the Json file
+     * @param moviename
+     * @param amount
+     * @param price
+     * @param bannedcountry
+     * @return the Movie or false otherwise
+     */
     public Movie addmovie(String moviename, int amount, int price, String[] bannedcountry){
         Movie movie = null;
         readWriteLock.writeLock().lock();
@@ -119,6 +133,43 @@ public class MoviesJSON {
         if(!movies_.hasMovie(moviename)){
             movie = new Movie(movies_.getnextid(),moviename,bannedcountry,price,amount);
             movies_.add(movie);
+            updateJson();
+        }
+        readWriteLock.writeLock().unlock();
+        return movie;
+    }
+
+    /**
+     * remove a movie from the system
+     * @param moviename
+     * @return true if the movie deleted.
+     */
+    public Boolean remmovie(String moviename){
+        readWriteLock.writeLock().lock();
+        getFromJson();
+        boolean ans=false;
+        Movie movie = movies_.getMovie(moviename);
+        if(movie!=null && movie.gettotalAmount()==movie.getavailableAmount()) {
+            movies_.remove(moviename);
+            updateJson();
+            ans=true;
+        }
+        readWriteLock.writeLock().unlock();
+        return ans;
+    }
+
+    /**
+     * chaning price of a specific movie
+     * @param moviename movie name
+     * @param price price
+     * @return movie if succeed and null otherwise
+     */
+    public Movie changeprice(String moviename, int price){
+        readWriteLock.writeLock().lock();
+        getFromJson();
+        Movie movie = movies_.getMovie(moviename);
+        if(movie != null){
+            movie.setprice(price);
             updateJson();
         }
         readWriteLock.writeLock().unlock();
