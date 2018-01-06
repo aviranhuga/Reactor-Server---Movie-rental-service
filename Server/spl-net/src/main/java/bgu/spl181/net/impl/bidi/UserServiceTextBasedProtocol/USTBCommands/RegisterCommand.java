@@ -26,12 +26,9 @@ public class RegisterCommand extends USTBCommand {
                 password!=null && // valid password
                 (!loggedIn) &&
                 service.registerNewUser(username,password,datablock)) //check with service
-            result.setResult("ACK", "ACK registration succeeded");
-        else
-            result.setResult("ERROR", "ERROR registration failed");
+            return new Result("ACK", "ACK registration succeeded");
 
-        System.out.println(result.getMessage());
-        return result;
+        return new Result("ERROR", "ERROR registration failed");
     }
 
 }

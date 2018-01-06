@@ -12,8 +12,7 @@ public class SignoutCommand extends USTBCommand  {
     }
     @Override
     public Result handle() {
-        if(!loggedIn)result.setResult("ERROR","ERROR signout failed");
-        else result.setResult("ACK","ACK signout succeeded");
-        return result;
+        if(!loggedIn)return new Result("ERROR","ERROR signout failed");
+        return new Result("ACK","ACK signout succeeded");
     }
 }

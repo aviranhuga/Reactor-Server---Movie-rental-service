@@ -63,4 +63,11 @@ public class Movies {
      */
     public Movie[] getMovies(){return movies;}
 
+    /**
+     * get the id of the next new movie
+     * @return id
+     */
+    public int getnextid(){
+        return movies[movies.length-1].getid()+1;
+    }
 }

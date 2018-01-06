@@ -20,7 +20,6 @@ public class ReactorMain {
         String moviespath ="example_Movies.json";
         ReadWriteLock userslock = new ReentrantReadWriteLock();
         ReadWriteLock movieslock = new ReentrantReadWriteLock();
-        Service service = new MovieRentalService(userpath,moviespath,userslock,movieslock);
 
         //online users
         ConcurrentHashMap<String, String> onlineUsers = new ConcurrentHashMap<>();
@@ -28,7 +27,7 @@ public class ReactorMain {
         //create server
         Server.reactor(6,
                 7777,
-                () -> new BidiMessagingProtocolImpl(onlineUsers,service),
+                () -> new BidiMessagingProtocolImpl(onlineUsers,new MovieRentalService(userpath,moviespath,userslock,movieslock)),
                 () -> new messagingEncoderDecoderImpl()
         ).serve();
     }

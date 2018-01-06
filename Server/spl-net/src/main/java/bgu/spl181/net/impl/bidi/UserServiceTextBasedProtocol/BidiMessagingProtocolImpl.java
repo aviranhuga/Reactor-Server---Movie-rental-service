@@ -23,7 +23,7 @@ public class BidiMessagingProtocolImpl implements BidiMessagingProtocol<String>{
         this.connectionId=connectionId;
         service.start();
         logedIn=false;
-        username="";
+        username=null;
     }
 
     public BidiMessagingProtocolImpl(ConcurrentHashMap<String,String> onlineUsers,Service service){
@@ -36,7 +36,7 @@ public class BidiMessagingProtocolImpl implements BidiMessagingProtocol<String>{
         TokenHandler th = new TokenHandler(message);
         th.Tokenize();
         Result result = null;
-
+        //no command , wrong syntax
         if(th.getCommandname()==null)return;
 
         switch (th.getCommandname()) {
@@ -56,11 +56,13 @@ public class BidiMessagingProtocolImpl implements BidiMessagingProtocol<String>{
                 if(result.getType().equals("ACK")){
                     logedIn=false;
                     onlineUsers.remove(username);
+                    connections.disconnect(connectionId);
                 }
                 break;
             case "REQUEST":
                 result = (new RequestCommand(this.username,th.getName(),th.getDataBlock(),logedIn,service)).handle();
-                if(result.getType().equals("BROADCAST"))broadcast(result.getMessage());
+                if(result.hasBroadcast())
+                    broadcast(result.getBroadcast());
                 break;
         }
         if(result!=null)connections.send(connectionId,result.getMessage());

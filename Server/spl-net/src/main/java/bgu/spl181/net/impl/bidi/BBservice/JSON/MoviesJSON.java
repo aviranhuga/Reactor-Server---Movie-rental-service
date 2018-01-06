@@ -4,6 +4,7 @@ import bgu.spl181.net.impl.bidi.BBservice.JSON.JSONclasses.movies.Movie;
 import bgu.spl181.net.impl.bidi.BBservice.JSON.JSONclasses.movies.Movies;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.sun.org.apache.xerces.internal.xs.StringList;
 
 import java.io.*;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -73,7 +74,7 @@ public class MoviesJSON {
     }
 
     /**
-     * get movie list
+     * get movies list
      * @return
      */
     public Movie[] getMovies(){
@@ -84,9 +85,44 @@ public class MoviesJSON {
         return movies;
     }
 
-    public void rentmovie(String moviename){
+    public Movie rentmovie(String moviename,int balance,String country){
+        readWriteLock.writeLock().lock();
+        Movie rentmovie=null;
         getFromJson();
-        movies_.getMovie(moviename).setavailableAmount(movies_.getMovie(moviename).gettotalAmount()-1);
+        Movie movie =movies_.getMovie(moviename);
+        if(movie!=null &&
+                movie.getprice()<balance &&
+                movie.availbleInCountry(country) &&
+                movie.getavailableAmount()>0) {
+            movie.decAvilableAmount();
+            rentmovie=movie;
+            updateJson();
+        }//end of if
+        readWriteLock.writeLock().unlock();
+        return rentmovie;
+    }
+
+    public Movie returnmovie(String moviename){
+        readWriteLock.writeLock().lock();
+        getFromJson();
+        Movie movie =movies_.getMovie(moviename);
+        movie.addAvilableAmount();
+        updateJson();
+        readWriteLock.writeLock().unlock();
+        return movie;
+    }
+
+    public Movie addmovie(String moviename, int amount, int price, String[] bannedcountry){
+        Movie movie = null;
+        readWriteLock.writeLock().lock();
+        getFromJson();
+        if(!movies_.hasMovie(moviename)){
+            movie = new Movie(movies_.getnextid(),moviename,bannedcountry,price,amount);
+            movies_.add(movie);
+            updateJson();
+        }
+        readWriteLock.writeLock().unlock();
+        return movie;
     }
 
 

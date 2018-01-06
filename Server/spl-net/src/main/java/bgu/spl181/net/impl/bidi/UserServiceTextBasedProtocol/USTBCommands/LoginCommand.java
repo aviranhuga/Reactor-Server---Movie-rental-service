@@ -28,10 +28,9 @@ public class LoginCommand extends USTBCommand {
                 !loggedIn && // check that the user not logged in
                 !onlineUsers.contains(username) && // check that no one logged on this username
                 service.CheckUsernameAndPassword(username,password)) // check password and username
-            result.setResult("ACK", "ACK login succeeded");
-        else
-            result.setResult("ERROR", "ERROR login failed");
-        return result;
+            return new Result("ACK", "ACK login succeeded");
+
+        return new Result("ERROR", "ERROR login failed");
     }
 
 }

@@ -29,15 +29,16 @@ public class Movie {
         /**
          * setters
          */
-        public void settotalAmount(int totalAmount) {this.totalAmount = totalAmount;}
-        public void setavailableAmount(int availableAmount) {this.availableAmount = availableAmount;}
+        public void decAvilableAmount() {availableAmount--;}
+        public void addAvilableAmount() {availableAmount++;}
+
         public void setprice(int price) {this.price = price;}
 
         public Boolean availbleInCountry(String countryname){
-            for(String i: bannedCountries)if(i.equals(countryname))return false;
+            for(String i: bannedCountries)
+                if(i.equals(countryname))return false;
             return true;
         }
-
 
         public Movie(int id, String name,String[] bannedCountries, int price,int totalAmount){
             this.id = id;

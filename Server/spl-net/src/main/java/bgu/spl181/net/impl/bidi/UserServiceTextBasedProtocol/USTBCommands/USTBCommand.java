@@ -6,12 +6,7 @@ import bgu.spl181.net.impl.bidi.UserServiceTextBasedProtocol.Result;
 
 public abstract class USTBCommand implements CommandInterface {
 
-    protected Result result= new Result();
     protected Service service;
     protected Boolean loggedIn;
-
-    public Result getResult() {
-        return result;
-    }
 
 }

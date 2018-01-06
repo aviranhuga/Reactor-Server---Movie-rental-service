@@ -93,13 +93,24 @@ public class TokenHandler {
     private void parseDatablock(String data){
         Boolean hasNext=true;
         while(hasNext) {
-            int i = data.indexOf(",");
-            if (i == -1) {
-                this.datablock.add(data);
-                hasNext=false;
-            } else {
-                this.datablock.add(data.substring(0, i));
-                data = data.substring(i + 1);
+            if(data.substring(0,1).equals("\"")){
+                data = data.substring(1);
+                int i = data.indexOf("\"");
+                if (i == -1) return;
+                else {
+                    this.datablock.add(data.substring(0, i));
+                    data = data.substring(i + 2);
+                }
+            }//end of "
+            else {
+                int i = data.indexOf(" ");
+                if (i == -1) {
+                    this.datablock.add(data);
+                    hasNext = false;
+                } else {
+                    this.datablock.add(data.substring(0, i));
+                    data = data.substring(i + 1);
+                }
             }
         }//end of while
     }

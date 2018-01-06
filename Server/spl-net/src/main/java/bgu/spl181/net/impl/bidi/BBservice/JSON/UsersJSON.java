@@ -1,5 +1,6 @@
 package bgu.spl181.net.impl.bidi.BBservice.JSON;
 
+import bgu.spl181.net.impl.bidi.BBservice.JSON.JSONclasses.movies.Movie;
 import bgu.spl181.net.impl.bidi.BBservice.JSON.JSONclasses.users.user;
 import bgu.spl181.net.impl.bidi.BBservice.JSON.JSONclasses.users.users;
 import com.google.gson.Gson;
@@ -65,34 +66,113 @@ public class UsersJSON {
         readWriteLock.readLock().unlock();
         return temp;
     }
+
     /**
-     * add new user to the json file
-     * @param newuser
+     * add a new user to JSON file
+     * @param newuser the new user
+     * @return true if added and false otherwise
      */
-    public void adduser(user newuser){
+    public Boolean adduser(user newuser){
+        Boolean ans;
         readWriteLock.writeLock().lock();
         getFromJson();
-        users_.add(newuser);
-        updateJson();
+        ans = users_.hasUser(newuser.getUsername());
+        if(ans){
+            users_.add(newuser);
+            updateJson();
+        }
         readWriteLock.writeLock().unlock();
+        return ans;
     }
     /**
      * check if user exist in json file
      * @param username
-     * @return
+     * @return true if the username mach the password and false other wise
      */
-    public Boolean hasUser(String username){
+    public Boolean CheckUsernameAndPassword(String username,String password){
+        Boolean ans=false;
         readWriteLock.readLock().lock();
         getFromJson();
-        Boolean ans =  users_.hasUser(username);
+        if(users_.hasUser(username))
+             ans = users_.getUser(username).getPassword().equals(password);
         readWriteLock.readLock().unlock();
         return ans;
     }
-    public void rentmovie(String username, String moviename, int amount){
+
+    /**
+     * add a amount to the username balance
+     * @param username
+     * @param amount
+     * @return the current balance of the username
+     */
+    public int addbalance(String username, int amount){
+        readWriteLock.writeLock().lock();
         getFromJson();
-        users_.getUser(username).decBalance(amount);
-        users_.getUser(username).addmovie(moviename);
+        users_.getUser(username).addBalance(amount);
+        int ans = users_.getUser(username).getBalance();
+        updateJson();
+        readWriteLock.writeLock().unlock();
+        return ans;
     }
 
+    /**
+     * rent a new movie, this function also use movie json
+     * @param username
+     * @param moviename
+     * @param movieshandler
+     * @return the movie
+     */
+    public Movie rentmovie(String username, String moviename, MoviesJSON movieshandler ){
+        readWriteLock.writeLock().lock();
+        getFromJson();
+        Movie movie = null;
+        user user = users_.getUser(username);
+        if(!user.hasmovie(moviename)) {
+            movie = movieshandler.rentmovie(moviename, user.getBalance(), user.getCountry());
+            if(movie!=null){
+                user.decBalance(movie.getprice());
+                user.addmovie(moviename);
+                updateJson();
+            }
+        }
+        readWriteLock.writeLock().unlock();
+        return movie;
+    }
+
+    /**
+     * return a movie, this function also use movie json
+     * @param username
+     * @param moviename
+     * @param movieshandler
+     * @return the movie
+     */
+    public Movie returnmovie(String username, String moviename, MoviesJSON movieshandler ){
+        readWriteLock.writeLock().lock();
+        getFromJson();
+        Movie movie = null;
+        user user = users_.getUser(username);
+        if(!user.hasmovie(moviename)) {
+            movie = movieshandler.returnmovie(moviename);
+            user.removemovie(moviename);
+            updateJson();
+        }
+        readWriteLock.writeLock().unlock();
+        return movie;
+    }
+
+    /**
+     * check if a specific user is an admin
+     * @param username
+     * @return true if admin, false otherwise
+     */
+    public Boolean checkifadmin(String username){
+        Boolean ans;
+        readWriteLock.readLock().lock();
+        getFromJson();
+        ans = users_.getUser(username).getType().equals("admin");
+        readWriteLock.readLock().unlock();
+        return ans;
+
+    }
 
 }

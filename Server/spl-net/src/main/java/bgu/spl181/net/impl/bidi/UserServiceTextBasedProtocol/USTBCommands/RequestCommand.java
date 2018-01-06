@@ -22,12 +22,10 @@ public class RequestCommand extends USTBCommand {
 
     @Override
     public Result handle() {
-        Result temp;
-        if(loggedIn) {
-            temp = service.handleRequest(name,username,datablock);
-            if(temp.getBooleanResult())return temp;
-        }
-        result.setResult("ERROR","ERROR request "+ name +" failed");
-        return result;
+
+        if(loggedIn)
+            return service.handleRequest(name,username,datablock);
+
+        return new Result("ERROR","ERROR request "+ name +" failed");
     }
 }
