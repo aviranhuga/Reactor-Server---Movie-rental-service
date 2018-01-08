@@ -1,5 +1,7 @@
 package bgu.spl181.net.impl.bidi.BBservice.JSON.JSONclasses.users;
 
+import bgu.spl181.net.impl.bidi.BBservice.JSON.JSONclasses.movies.Movie;
+
 /**
  * general class to represent user in the system
  */
@@ -10,7 +12,7 @@ public class user {
     private String password;
     private String country;
     private userMovie[] movies;
-    private int balance;
+    private String balance;
 
 
     public user(String username, String type, String password, String country){
@@ -18,7 +20,7 @@ public class user {
         this.type = type;
         this.password = password;
         this.country = country;
-        balance = 0;
+        balance = String.valueOf(0);
         movies = new userMovie[0];
     }
 
@@ -29,9 +31,9 @@ public class user {
     public String getPassword() {return password;}
     public String getType() {return type;}
     public String getCountry() {return country;}
-    public int getBalance() {return balance;}
-    public void addBalance(int addtobalance) {this.balance = balance + addtobalance;}
-    public void decBalance(int dectobalance) {this.balance = balance - dectobalance;}
+    public int getBalance() {return Integer.parseInt(balance);}
+    public void addBalance(int addtobalance) {this.balance = String.valueOf(Integer.parseInt(balance) + addtobalance);}
+    public void decBalance(int dectobalance) {this.balance = String.valueOf(Integer.parseInt(balance) - dectobalance);}
     /**
      * checking if the user has the movie
      * @param moviename
@@ -44,14 +46,14 @@ public class user {
 
     /**
      * add new movie to this user movies list
-     * @param moviename
+     * @param movie
      */
-    public void addmovie(String moviename){
+    public void addmovie(Movie movie){
         userMovie[] temp = new userMovie[movies.length+1];
         int j=0;
         for(userMovie i:movies)
             temp[j++] = i;
-        temp[j] = new userMovie(temp[j-1].getId()+1,moviename);
+        temp[j] = new userMovie(movie.getid(),movie.getname());
         movies=temp;
     }
 

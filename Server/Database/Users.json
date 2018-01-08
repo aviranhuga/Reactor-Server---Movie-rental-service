@@ -6,7 +6,7 @@
       "password": "potato",
       "country": "united states",
       "movies": [],
-      "balance": 0
+      "balance": "33"
     },
     {
       "username": "lisa",
@@ -23,7 +23,7 @@
           "name": "The Notebook"
         }
       ],
-      "balance": 37
+      "balance": "37"
     },
     {
       "username": "shlomi",
@@ -32,19 +32,15 @@
       "country": "israel",
       "movies": [
         {
+          "id": 1,
+          "name": "The Godfather"
+        },
+        {
           "id": 2,
           "name": "The Pursuit Of Happyness"
         }
       ],
-      "balance": 95
-    },
-    {
-      "username": "steve",
-      "type": "normal",
-      "password": "mypass",
-      "country": "iran",
-      "movies": [],
-      "balance": 50
+      "balance": "112"
     }
   ]
 }

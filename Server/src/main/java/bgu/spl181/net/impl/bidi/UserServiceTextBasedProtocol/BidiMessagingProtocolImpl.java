@@ -63,8 +63,7 @@ public class BidiMessagingProtocolImpl implements BidiMessagingProtocol<String>{
                 break;
             case "REQUEST":
                 result = (new RequestCommand(this.username,th.getName(),th.getDataBlock(),logedIn,service)).handle();
-                if(result==null)
-                    System.out.println("DSDSD");
+                if(result==null) return;
                 if(result.hasBroadcast())
                     broadcast(result.getBroadcast());
                 break;

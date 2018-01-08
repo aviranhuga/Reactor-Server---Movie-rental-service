@@ -1,43 +1,43 @@
 {
   "movies": [
     {
-      "id": 1,
+      "id": "1",
       "name": "The Godfather",
-      "price": 25,
+      "price": "25",
       "bannedCountries": [
         "united kingdom",
         "italy"
       ],
-      "availableAmount": 2,
-      "totalAmount": 2
+      "availableAmount": "1",
+      "totalAmount": "2"
     },
     {
-      "id": 2,
+      "id": "2",
       "name": "The Pursuit Of Happyness",
-      "price": 14,
+      "price": "14",
       "bannedCountries": [],
-      "availableAmount": 3,
-      "totalAmount": 5
+      "availableAmount": "3",
+      "totalAmount": "5"
     },
     {
-      "id": 3,
+      "id": "3",
       "name": "The Notebook",
-      "price": 5,
+      "price": "5",
       "bannedCountries": [],
-      "availableAmount": 3,
-      "totalAmount": 1
+      "availableAmount": "0",
+      "totalAmount": "1"
     },
     {
-      "id": 4,
-      "name": "South Park: Bigger, Longer \u0026 Uncut",
-      "price": 9,
+      "id": "4",
+      "name": "Justice League",
+      "price": "17",
       "bannedCountries": [
-        "Israel",
-        "Iran",
-        "Italy"
+        "jordan",
+        "iran",
+        "lebanon"
       ],
-      "availableAmount": 30,
-      "totalAmount": 30
+      "availableAmount": "3",
+      "totalAmount": "4"
     }
   ]
 }

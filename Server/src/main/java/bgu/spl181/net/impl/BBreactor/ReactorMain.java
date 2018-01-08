@@ -23,8 +23,8 @@ public class ReactorMain {
         //online users
         ConcurrentHashMap<String, String> onlineUsers = new ConcurrentHashMap<>();
 
-        //create server
-        Server.reactor(6, Integer.parseInt(args[0]),
+        //create server  Integer.parseInt(args[0]
+        Server.reactor(6, 7777,
                 () -> new BidiMessagingProtocolImpl(onlineUsers, new MovieRentalService(userpath, moviespath, userslock, movieslock)),
                 () -> new messagingEncoderDecoderImpl()).serve();
     }

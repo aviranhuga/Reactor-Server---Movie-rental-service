@@ -1,33 +1,34 @@
 package bgu.spl181.net.impl.bidi.BBservice.JSON.JSONclasses.movies;
+
 /**
  * this class represent a movie in the system
  */
 public class Movie {
 
-        private int id;
+        private String id;
         private String name;
-        private int price;
+        private String price;
         private String[] bannedCountries;
-        private int availableAmount;
-        private int totalAmount;
+        private String availableAmount;
+        private String totalAmount;
 
     public Movie(int id, String name,String[] bannedCountries, int price,int totalAmount){
-        this.id = id;
+        this.id = String.valueOf(id);
         this.name = name;
-        this.price = price;
+        this.price = String.valueOf(price);
         this.bannedCountries = bannedCountries;
-        this.totalAmount = totalAmount;
-        availableAmount = totalAmount;
+        this.totalAmount = String.valueOf(totalAmount);
+        availableAmount = String.valueOf(totalAmount);
     }
     /**
      * getters
      */
-    public int getid(){return id;}
+    public int getid(){return Integer.parseInt(id);}
     public String getprintingname() {return "\"" + name + "\"";}
     public String getname(){return name;}
-    public int getprice() {return price;}
-    public int getavailableAmount() {return availableAmount;}
-    public int gettotalAmount() {return totalAmount;}
+    public int getprice() {return Integer.parseInt(price);}
+    public int getavailableAmount() {return Integer.parseInt(availableAmount);}
+    public int gettotalAmount() {return Integer.parseInt(totalAmount);}
      public String getbannedCountries() {
         String ans = "";
         if (bannedCountries.length > 0) ans = "\""+bannedCountries[0]+"\"";
@@ -38,9 +39,9 @@ public class Movie {
     }/**
      * setters
      */
-    public void decAvilableAmount() {availableAmount--;}
-    public void addAvilableAmount() {availableAmount++;}
-    public void setprice(int price) {this.price = price;}
+    public void decAvilableAmount() {this.availableAmount = String.valueOf(Integer.parseInt(availableAmount)-1);}
+    public void addAvilableAmount() {this.availableAmount = String.valueOf(Integer.parseInt(availableAmount)+1);}
+    public void setprice(int price) {this.price = String.valueOf(price);}
      public Boolean availbleInCountry(String countryname){
         for(String i: bannedCountries)
             if(i.equals(countryname))return false;

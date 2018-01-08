@@ -130,7 +130,7 @@ public class UsersJSON {
             movie = movieshandler.rentmovie(moviename, user.getBalance(), user.getCountry());
             if(movie!=null){
                 user.decBalance(movie.getprice());
-                user.addmovie(moviename);
+                user.addmovie(movie);
                 updateJson();
             }
         }
