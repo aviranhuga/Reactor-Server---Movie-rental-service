@@ -16,6 +16,7 @@ public class BidiMessagingProtocolImpl implements BidiMessagingProtocol<String>{
     private Boolean logedIn;
     private Service service;
     private ConcurrentHashMap<String,String> onlineUsers;
+    private Boolean shouldTerminate=false;
 
     @Override
     public void start(int connectionId, Connections<String> connections) {
@@ -48,39 +49,49 @@ public class BidiMessagingProtocolImpl implements BidiMessagingProtocol<String>{
                 if(result.getType().equals("ACK")){
                     logedIn=true;
                     username=th.getName();
-                    onlineUsers.put(th.getName(),String.valueOf(connectionId));
+                    synchronized (onlineUsers) {
+                        onlineUsers.put(th.getName(), String.valueOf(connectionId));
+                    }
                 }
                 break;
             case "SIGNOUT":
                 result = (new SignoutCommand(logedIn)).handle();
                 if(result.getType().equals("ACK")){
-                    connections.send(connectionId,result.getMessage());
                     logedIn=false;
-                    onlineUsers.remove(username);
+                    synchronized (onlineUsers) {
+                        onlineUsers.remove(username);
+                    }
+                    connections.send(connectionId,result.getMessage());
                     connections.disconnect(connectionId);
                     result=null;
+                    shouldTerminate=true;
                 }
                 break;
             case "REQUEST":
                 result = (new RequestCommand(this.username,th.getName(),th.getDataBlock(),logedIn,service)).handle();
                 if(result==null) return;
-                if(result.hasBroadcast())
-                    broadcast(result.getBroadcast());
+
                 break;
         }
-        if(result!=null)connections.send(connectionId,result.getMessage());
-
+        if(result!=null) {
+            connections.send(connectionId, result.getMessage());
+            if (result.hasBroadcast())
+                broadcast(result.getBroadcast());
+        }
     }
 
     @Override
     public boolean shouldTerminate() {
-        return false;
+        return shouldTerminate;
     }
 
     private void broadcast(String msg){
+        synchronized (onlineUsers){
         Iterator<String> it = onlineUsers.keySet().iterator();
-        while(it.hasNext())
-            connections.send(Integer.parseInt(onlineUsers.get(it.next())),msg);
+        while(it.hasNext()) {
+            connections.send(Integer.parseInt(onlineUsers.get(it.next())), msg);
+        }
+        }
     }
 
 }

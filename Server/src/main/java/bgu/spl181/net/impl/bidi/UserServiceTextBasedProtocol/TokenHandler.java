@@ -93,7 +93,8 @@ public class TokenHandler {
     private void parseDatablock(String data){
         Boolean hasNext=true;
         while(hasNext) {
-            if(data.substring(0,1).equals("\"")){
+            if(data.length()==0)return;
+            if(data.length()>1 && data.substring(0,1).equals("\"")){
                 data = data.substring(1);
                 int i = data.indexOf("\"");
                 if (i == -1) return;

@@ -68,6 +68,7 @@ public class Movies {
      * @return id
      */
     public int getnextid(){
+        if(movies.length==0)return 1;
         return movies[movies.length-1].getid()+1;
     }
 }
