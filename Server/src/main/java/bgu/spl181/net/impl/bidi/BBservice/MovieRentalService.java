@@ -213,11 +213,11 @@ public class MovieRentalService  implements Service {
      * @return action result
      */
     private Result handlechangeprice(String username,ArrayList<String> parameters){
-        if(usershandler.checkifadmin(username) && parameters.size()==1){
+        if(usershandler.checkifadmin(username) && parameters.size()==2){
             int price = Integer.parseInt(parameters.get(1));
             if(price>0){
-                Movie movie = movieshandler.changeprice(username, price);
-                    return new Result("ACK", "ACK changeprice \""+parameters.get(1) +"\" " +String.valueOf(movie.getavailableAmount()));
+                Movie movie = movieshandler.changeprice(parameters.get(0), price);
+                    return new Result("ACK", "ACK changeprice \""+parameters.get(0) +"\" success","BROADCAST movie \""+parameters.get(0) +"\" " +String.valueOf(movie.getavailableAmount()));
             }
         }
         return new Result("ERROR","ERROR request changeprice failed");

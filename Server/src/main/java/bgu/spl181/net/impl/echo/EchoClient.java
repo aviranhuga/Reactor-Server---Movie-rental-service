@@ -83,7 +83,7 @@ public class EchoClient {
             ArrayList<String> cmds = new ArrayList<>();
             cmds.add("REGISTER "+client+" tryingagain country=\"Russia\"\n");
             cmds.add("LOGIN "+client+" tryingagain\n");
-            cmds.add("REQUEST balance add 15\n");
+            cmds.add("REQUEST balance add 200\n");
             cmds.add("REQUEST rent \"Alice in wonderland\"\n");
             cmds.add("REQUEST rent \"The Godfather\"\n");
             cmds.add("REQUEST return \"Alice in wonderland\"\n");
@@ -166,7 +166,7 @@ public class EchoClient {
             ArrayList<String> cmds = new ArrayList<>();
             cmds.add("REGISTER "+client+" tryingagain country=\"Russia\"\n");
             cmds.add("LOGIN "+client+" tryingagain\n");
-            cmds.add("REQUEST balance add 10\n");
+            cmds.add("REQUEST balance add 200\n");
             cmds.add("REQUEST rent \"Gay dor\"\n");
             cmds.add("REQUEST rent \"The Godfather\"\n");
             cmds.add("REQUEST rent \"Matrix\"\n");
@@ -210,7 +210,7 @@ public class EchoClient {
             ArrayList<String> cmds = new ArrayList<>();
             cmds.add("REGISTER "+client+" tryingagain country=\"Russia\"\n");
             cmds.add("LOGIN "+client+" tryingagain\n");
-            cmds.add("REQUEST balance add 10\n");
+            cmds.add("REQUEST balance add 300\n");
             cmds.add("REQUEST rent \"Gay dor\"\n");
             cmds.add("REQUEST rent \"The Godfather\"\n");
             cmds.add("REQUEST rent \"Matrix\"\n");

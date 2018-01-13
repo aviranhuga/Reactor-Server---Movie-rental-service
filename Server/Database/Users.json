@@ -6,7 +6,7 @@
       "password": "admin",
       "country": "united states",
       "movies": [],
-      "balance": "100"
+      "balance": "200"
     },
     {
       "username": "Client0",
@@ -14,7 +14,7 @@
       "password": "tryingagain",
       "country": "Russia",
       "movies": [],
-      "balance": "50"
+      "balance": "9350"
     },
     {
       "username": "Client1",
@@ -22,7 +22,7 @@
       "password": "tryingagain",
       "country": "Russia",
       "movies": [],
-      "balance": "2450"
+      "balance": "4900"
     },
     {
       "username": "Client2",
@@ -30,7 +30,7 @@
       "password": "tryingagain",
       "country": "Russia",
       "movies": [],
-      "balance": "250"
+      "balance": "10000"
     },
     {
       "username": "Client3",
@@ -38,7 +38,7 @@
       "password": "tryingagain",
       "country": "Russia",
       "movies": [],
-      "balance": "10"
+      "balance": "14160"
     }
   ]
 }
