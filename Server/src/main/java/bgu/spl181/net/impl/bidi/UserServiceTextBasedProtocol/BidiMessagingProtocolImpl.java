@@ -64,7 +64,7 @@ public class BidiMessagingProtocolImpl implements BidiMessagingProtocol<String>{
                     connections.send(connectionId,result.getMessage());
                     connections.disconnect(connectionId);
                     result=null;
-                    //shouldTerminate=true;
+                   // shouldTerminate=true;
                 }
                 break;
             case "REQUEST":

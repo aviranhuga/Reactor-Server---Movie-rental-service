@@ -1,20 +1,3 @@
 {
-  "movies": [
-    {
-      "id": "2",
-      "name": "The Godfather",
-      "price": "2",
-      "bannedCountries": [],
-      "availableAmount": "3",
-      "totalAmount": "7"
-    },
-    {
-      "id": "3",
-      "name": "Alice in wonderland",
-      "price": "12",
-      "bannedCountries": [],
-      "availableAmount": "7",
-      "totalAmount": "7"
-    }
-  ]
+  "movies": []
 }
