@@ -178,7 +178,9 @@ public class MovieRentalService  implements Service {
      */
     private Result handleaddmovie(String username,ArrayList<String> parameters ){
         if(usershandler.checkifadmin(username)&&
-                parameters.size()>2){
+                parameters.size()>2 &&
+                Integer.parseInt(parameters.get(1))>=0 &&
+                Integer.parseInt(parameters.get(2))>=0){
             String[] bannedcountryArray = new String[parameters.size()-3];
             for(int i=0 ; i<bannedcountryArray.length ; i++)
                 bannedcountryArray[i]=parameters.get(i+3);

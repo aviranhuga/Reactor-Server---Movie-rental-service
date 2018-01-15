@@ -24,7 +24,7 @@ public class TPCMain {
         ConcurrentHashMap<String, String> onlineUsers = new ConcurrentHashMap<>();
 
         //create server
-        Server.threadPerClient(7777,
+        Server.threadPerClient(Integer.parseInt(args[0]),
                 () -> new BidiMessagingProtocolImpl(onlineUsers,new MovieRentalService(userpath,moviespath,userslock,movieslock)),
                 () -> new messagingEncoderDecoderImpl()
                  ).serve();
