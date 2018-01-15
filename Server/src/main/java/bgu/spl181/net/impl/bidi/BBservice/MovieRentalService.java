@@ -219,7 +219,7 @@ public class MovieRentalService  implements Service {
             int price = Integer.parseInt(parameters.get(1));
             if(price>0){
                 Movie movie = movieshandler.changeprice(parameters.get(0), price);
-                    return new Result("ACK", "ACK changeprice \""+parameters.get(0) +"\" success","BROADCAST movie \""+parameters.get(0) +"\" " +String.valueOf(movie.getavailableAmount()));
+                    return new Result("ACK", "ACK changeprice \""+parameters.get(0) +"\" success","BROADCAST movie \""+parameters.get(0) +"\" " +String.valueOf(movie.getavailableAmount()) +" " + String.valueOf(price));
             }
         }
         return new Result("ERROR","ERROR request changeprice failed");

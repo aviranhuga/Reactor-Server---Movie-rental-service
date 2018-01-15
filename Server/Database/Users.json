@@ -1,60 +1,46 @@
 {
   "users": [
     {
-      "username": "admin",
+      "username": "john",
       "type": "admin",
-      "password": "admin",
+      "password": "potato",
       "country": "united states",
       "movies": [],
-      "balance": "300"
+      "balance": "0"
     },
-    {
-      "username": "Client0",
+	{
+      "username": "lisa",
       "type": "normal",
-      "password": "tryingagain",
-      "country": "Russia",
-      "movies": [],
-      "balance": "9300"
+      "password": "chips123",
+      "country": "spain",
+      "movies": [
+        {
+          "id": "2",
+          "name": "The Pursuit Of Happyness"
+        },
+		{
+		  "id": "3",
+		  "name": "The Notebook"
+		}
+      ],
+      "balance": "37"
     },
-    {
-      "username": "Client2",
+	{
+      "username": "shlomi",
       "type": "normal",
-      "password": "tryingagain",
-      "country": "Russia",
-      "movies": [],
-      "balance": "9750"
-    },
-    {
-      "username": "Client1",
-      "type": "normal",
-      "password": "tryingagain",
-      "country": "Russia",
-      "movies": [],
-      "balance": "2450"
-    },
-    {
-      "username": "Client3",
-      "type": "normal",
-      "password": "tryingagain",
-      "country": "Russia",
-      "movies": [],
-      "balance": "14150"
-    },
-    {
-      "username": "client2",
-      "type": "normal",
-      "password": "client2",
+      "password": "cocacola",
       "country": "israel",
-      "movies": [],
-      "balance": "1000"
-    },
-    {
-      "username": "client3",
-      "type": "normal",
-      "password": "client3",
-      "country": "israel",
-      "movies": [],
-      "balance": "1000"
+      "movies": [
+        {
+          "id": "1",
+          "name": "The Godfather"
+        },
+		{
+		  "id": "2",
+		  "name": "The Pursuit Of Happyness"
+		}
+      ],
+      "balance": "112"
     }
   ]
 }
